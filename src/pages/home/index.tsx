@@ -1,14 +1,14 @@
-import MainLayout from "@/layouts/MainLayout";
 import { Container, Grid } from "@mui/material";
 import Head from "next/head";
 import HomeRentChart from "./components/HomeRentChart";
 import { useSettingsContext } from "@/components/settings";
 import HomeRentChange from "./components/HomeRentChange";
 import HomeTableTabs from "./components/homeTables";
+import DashboardLayout from "@/layouts/dashboard";
 
-Home.getLayout = function getLayout(page: React.ReactElement) {
-  return <MainLayout>{page}</MainLayout>;
-};
+Home.getLayout = (page: React.ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
 
 export default function Home() {
   const { themeStretch } = useSettingsContext();

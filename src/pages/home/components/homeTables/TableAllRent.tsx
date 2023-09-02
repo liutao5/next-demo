@@ -5,6 +5,12 @@ import {
   GridColDef,
   GridRowsProp,
   GridToolbar,
+  GridToolbarColumnsButton,
+  GridToolbarContainer,
+  GridToolbarDensitySelector,
+  GridToolbarFilterButton,
+  nlNL,
+  zhCN,
 } from "@mui/x-data-grid-premium";
 import {
   DateRangePicker,
@@ -149,57 +155,172 @@ export default function TableAllRent() {
       doneInvoice: 10,
       todoInvoice: 20,
     },
+    {
+      id: 6,
+      rentType: "1",
+      currentFee: 123,
+      currentClosed: 100,
+      currentOpen: 23,
+      rate: 0.1,
+      lastOpen: 20,
+      allOpen: 40,
+      deposit: 10,
+      doneInvoice: 10,
+      todoInvoice: 20,
+    },
+    {
+      id: 7,
+      rentType: "1",
+      currentFee: 123,
+      currentClosed: 100,
+      currentOpen: 23,
+      rate: 0.1,
+      lastOpen: 20,
+      allOpen: 40,
+      deposit: 10,
+      doneInvoice: 10,
+      todoInvoice: 20,
+    },
+    {
+      id: 8,
+      rentType: "1",
+      currentFee: 123,
+      currentClosed: 100,
+      currentOpen: 23,
+      rate: 0.1,
+      lastOpen: 20,
+      allOpen: 40,
+      deposit: 10,
+      doneInvoice: 10,
+      todoInvoice: 20,
+    },
+    {
+      id: 9,
+      rentType: "1",
+      currentFee: 123,
+      currentClosed: 100,
+      currentOpen: 23,
+      rate: 0.1,
+      lastOpen: 20,
+      allOpen: 40,
+      deposit: 10,
+      doneInvoice: 10,
+      todoInvoice: 20,
+    },
+    {
+      id: 10,
+      rentType: "1",
+      currentFee: 123,
+      currentClosed: 100,
+      currentOpen: 23,
+      rate: 0.1,
+      lastOpen: 20,
+      allOpen: 40,
+      deposit: 10,
+      doneInvoice: 10,
+      todoInvoice: 20,
+    },
+    {
+      id: 11,
+      rentType: "1",
+      currentFee: 123,
+      currentClosed: 100,
+      currentOpen: 23,
+      rate: 0.1,
+      lastOpen: 20,
+      allOpen: 40,
+      deposit: 10,
+      doneInvoice: 10,
+      todoInvoice: 20,
+    },
+    {
+      id: 12,
+      rentType: "1",
+      currentFee: 123,
+      currentClosed: 100,
+      currentOpen: 23,
+      rate: 0.1,
+      lastOpen: 20,
+      allOpen: 40,
+      deposit: 10,
+      doneInvoice: 10,
+      todoInvoice: 20,
+    },
+    {
+      id: 13,
+      rentType: "1",
+      currentFee: 123,
+      currentClosed: 100,
+      currentOpen: 23,
+      rate: 0.1,
+      lastOpen: 20,
+      allOpen: 40,
+      deposit: 10,
+      doneInvoice: 10,
+      todoInvoice: 20,
+    },
   ];
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <Stack
+          justifyContent="space-between"
+          flexDirection="row"
+          sx={{ width: 1 }}
+        >
+          <Stack flexDirection="row" alignItems="center" sx={{ p: 2 }}>
+            <DateRangePicker
+              label="日期范围"
+              slots={{ field: SingleInputDateRangeField }}
+            />
+            <TextField
+              placeholder="Search client or invoice number..."
+              sx={{ px: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify
+                      icon="eva:search-fill"
+                      sx={{ color: "text.disabled" }}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+          <Stack flexDirection="row">
+            <GridToolbarColumnsButton />
+            <GridToolbarDensitySelector />
+          </Stack>
+        </Stack>
+      </GridToolbarContainer>
+    );
+  }
   return (
-    <Card sx={{ height: 400 }}>
-      <Stack
-        spacing={2}
-        alignItems="center"
-        direction={{
-          xs: "column",
-          md: "row",
-        }}
-        sx={{ px: 2.5, py: 3 }}
-      >
-        <DateRangePicker
-          label="日期范围"
-          slots={{ field: SingleInputDateRangeField }}
-        />
-        <TextField
-          fullWidth
-          placeholder="Search client or invoice number..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify
-                  icon="eva:search-fill"
-                  sx={{ color: "text.disabled" }}
-                />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
-      <DataGridPremium
-        checkboxSelection
-        initialState={{
-          aggregation: {
-            model: {
-              currentFee: "sum",
-              currentClosed: "sum",
-              currentOpen: "sum",
-              lastOpen: "sum",
-              allOpen: "sum",
-              deposit: "sum",
-              doneInvoice: "sum",
-              todoInvoice: "sum",
-            },
+    <DataGridPremium
+      autoHeight
+      checkboxSelection
+      localeText={zhCN.components.MuiDataGrid.defaultProps.localeText}
+      slots={{
+        toolbar: CustomToolbar,
+      }}
+      initialState={{
+        aggregation: {
+          model: {
+            currentFee: "sum",
+            currentClosed: "sum",
+            currentOpen: "sum",
+            lastOpen: "sum",
+            allOpen: "sum",
+            deposit: "sum",
+            doneInvoice: "sum",
+            todoInvoice: "sum",
           },
-        }}
-        rows={rows}
-        columns={columns}
-        slots={{ toolbar: GridToolbar }}
-      />
-    </Card>
+        },
+      }}
+      rows={rows}
+      columns={columns}
+    />
   );
 }

@@ -1,8 +1,8 @@
-import MainLayout from "@/layouts/MainLayout";
+import DashboardLayout from "@/layouts/dashboard";
 
-Reconcile.getLayout = function getLayout(page: React.ReactElement) {
-  return <MainLayout>{page}</MainLayout>;
-};
+Reconcile.getLayout = (page: React.ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
 
 export default function Reconcile() {
   return <>Reconcile</>;

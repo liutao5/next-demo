@@ -1,8 +1,8 @@
-import MainLayout from "@/layouts/MainLayout";
+import DashboardLayout from "@/layouts/dashboard";
 
-Receipts.getLayout = function getLayout(page: React.ReactElement) {
-  return <MainLayout>{page}</MainLayout>;
-};
+Receipts.getLayout = (page: React.ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
 
 export default function Receipts() {
   return <>Receipts</>;

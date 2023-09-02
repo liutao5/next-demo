@@ -1,11 +1,35 @@
-// 导入包
+import axios from 'axios';
+// config
+import { HOST_API_KEY } from '../config-global';
 import { signature } from '@/wusuan-api-sign/wusuan_api_sign';
+import uuidv4 from './uuidv4';
 
-// 时间戳，字符串格式
-const timestamp = "1501640900";
-// 随机数，最好使用UUID，字符串格式
-const nonce = "5d7db9ef-6451-47ac-8c40-6brg7df4b7ec";
-// api_signature 就是计算后的签名，字符串格式
-const api_signature = signature(timestamp, nonce);
+const axiosInstance = axios.create({
+	baseURL: HOST_API_KEY,
+	headers: {
+		'Content-Type': 'application/json',
+	}
+});
 
-export default api_signature
+const request = async (url: string, data?: object, method: string = 'post') => {
+	const timestamp = (Date.now()/1000).toFixed();
+	const nonce = uuidv4();
+	const api_signature = signature(timestamp, nonce);
+
+	const response = await axiosInstance.request({
+		url,
+		data,
+		method,
+		headers: {
+			'X-Api-Timestamp': timestamp,
+			'X-Api-Nonce': nonce,
+			'X-Api-Signature': api_signature,
+			'X-App-Platform': 'web',
+			'X-App-Version': '0.0.1',
+		},
+	})
+	console.log('response', response)
+	return response.data
+}
+
+export { axiosInstance, request } ;

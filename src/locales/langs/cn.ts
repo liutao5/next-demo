@@ -60,7 +60,8 @@ const cn = {
   contract: `合同`,
   receipts: `单据`,
   reconcile: `对账`,
-  total: `租出租费`
+  total: `租出租费`,
+  login: `登录`,
 };
 
 export default cn;

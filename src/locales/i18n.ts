@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 // utils
-// import localStorageAvailable from '../utils/localStorageAvailable';
+import localStorageAvailable from '@/utils/localStorageAvailable';
 //
 import { defaultLang } from './config-lang';
 //
@@ -16,12 +16,11 @@ import arLocales from './langs/ar';
 
 let lng = defaultLang.value;
 
-// TODO:
-// const storageAvailable = localStorageAvailable();
+const storageAvailable = localStorageAvailable();
 
-// if (storageAvailable) {
-//   lng = localStorage.getItem('i18nextLng') || defaultLang.value;
-// }
+if (storageAvailable) {
+  lng = localStorage.getItem('i18nextLng') || defaultLang.value;
+}
 
 i18n
   .use(LanguageDetector)
