@@ -1,5 +1,6 @@
 // i18n
 import "../locales/i18n";
+import "dayjs/locale/zh-cn";
 import ThemeProvider from "@/theme";
 import ThemeLocalization from "@/locales";
 import { LicenseInfo } from "@mui/x-license-pro";
@@ -33,7 +34,7 @@ export default function MyApp(props: MyAppProps) {
         <title>无算</title>
       </Head>
       <AuthProvider>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="zh-cn">
           <ThemeProvider>
             <ThemeLocalization>
               {getLayout(<Component {...pageProps} />)}

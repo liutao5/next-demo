@@ -1,21 +1,5 @@
-import Iconify from "@/components/iconify";
-import { Box, Card, InputAdornment, Stack, TextField } from "@mui/material";
-import {
-  DataGridPremium,
-  GridColDef,
-  GridRowsProp,
-  GridToolbar,
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-  nlNL,
-  zhCN,
-} from "@mui/x-data-grid-premium";
-import {
-  DateRangePicker,
-  SingleInputDateRangeField,
-} from "@mui/x-date-pickers-pro";
+import AssembleTable from "@/components/assemble-table";
+import { GridColDef, GridRowsProp } from "@mui/x-data-grid-premium";
 
 const columns: GridColDef[] = [
   {
@@ -260,67 +244,5 @@ export default function TableAllRent() {
       todoInvoice: 20,
     },
   ];
-
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <Stack
-          justifyContent="space-between"
-          flexDirection="row"
-          sx={{ width: 1 }}
-        >
-          <Stack flexDirection="row" alignItems="center" sx={{ p: 2 }}>
-            <DateRangePicker
-              label="日期范围"
-              slots={{ field: SingleInputDateRangeField }}
-            />
-            <TextField
-              placeholder="Search client or invoice number..."
-              sx={{ px: 2 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify
-                      icon="eva:search-fill"
-                      sx={{ color: "text.disabled" }}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Stack>
-          <Stack flexDirection="row">
-            <GridToolbarColumnsButton />
-            <GridToolbarDensitySelector />
-          </Stack>
-        </Stack>
-      </GridToolbarContainer>
-    );
-  }
-  return (
-    <DataGridPremium
-      autoHeight
-      checkboxSelection
-      localeText={zhCN.components.MuiDataGrid.defaultProps.localeText}
-      slots={{
-        toolbar: CustomToolbar,
-      }}
-      initialState={{
-        aggregation: {
-          model: {
-            currentFee: "sum",
-            currentClosed: "sum",
-            currentOpen: "sum",
-            lastOpen: "sum",
-            allOpen: "sum",
-            deposit: "sum",
-            doneInvoice: "sum",
-            todoInvoice: "sum",
-          },
-        },
-      }}
-      rows={rows}
-      columns={columns}
-    />
-  );
+  return <AssembleTable columns={columns} rows={rows} />;
 }

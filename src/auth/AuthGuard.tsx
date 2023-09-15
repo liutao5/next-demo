@@ -3,13 +3,14 @@ import { useAuthContext } from "./useAuthContext";
 import { useEffect, useState } from "react";
 import Login from "@/pages/auth/login";
 import LoadingScreen from "@/components/loading-screen";
+import CreateCompany from "@/pages/auth/createCompany";
 
 type AuthGuardProps = {
   children: React.ReactNode;
 };
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const { isAuthenticated, isInitialized } = useAuthContext();
+  const { isAuthenticated, isInitialized, companyId } = useAuthContext();
 
   const { pathname, push } = useRouter();
 
@@ -30,7 +31,10 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     return <LoadingScreen />;
   }
 
-  console.log("isAuthenticated", isAuthenticated);
+  if (isAuthenticated && !companyId) {
+    return <Login loginStatus="company" />;
+  }
+
   if (!isAuthenticated) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);

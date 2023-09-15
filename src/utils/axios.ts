@@ -16,7 +16,7 @@ const request = async (url: string, data?: object, method: string = 'post') => {
 	const nonce = uuidv4();
 	const api_signature = signature(timestamp, nonce);
 
-	const response = await axiosInstance.request({
+	return axiosInstance.request({
 		url,
 		data,
 		method,
@@ -27,9 +27,14 @@ const request = async (url: string, data?: object, method: string = 'post') => {
 			'X-App-Platform': 'web',
 			'X-App-Version': '0.0.1',
 		},
+	}).then(res => {
+		return res.data
+	}).catch(err => {
+		return err.response.data
 	})
-	console.log('response', response)
-	return response.data
 }
 
-export { axiosInstance, request } ;
+const get = (url: string, data?: object) => request(url, data, 'get')
+const post = (url: string, data?: object) => request(url, data, 'post')
+
+export { axiosInstance, get, post } ;

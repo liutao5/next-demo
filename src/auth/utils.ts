@@ -38,3 +38,15 @@ export const setSession = (accessToken: string | null) => {
     delete axiosInstance.defaults.headers.common.Authorization;
   }
 };
+
+export const setCompany = (companyId: string | null) => {
+  if (companyId) {
+    localStorage.setItem('companyId', companyId)
+  } else {
+    localStorage.removeItem('companyId')
+  }
+}
+
+export const getCompany = () => {
+  return localStorage.getItem('companyId')
+}

@@ -33,7 +33,7 @@ export default function NavAccount() {
   return (
     <Link
       component={NextLink}
-      href={PATH_DASHBOARD.user.account}
+      href={PATH_DASHBOARD.root}
       underline="none"
       color="inherit"
     >
@@ -42,7 +42,7 @@ export default function NavAccount() {
 
         <Box sx={{ ml: 2, minWidth: 0 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.mobile}
+            {user?.nick_name}
           </Typography>
         </Box>
       </StyledRoot>

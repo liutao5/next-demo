@@ -15,18 +15,18 @@ type GuestGuardProps = {
 export default function GuestGuard({ children }: GuestGuardProps) {
   const { push } = useRouter();
 
-  const { isAuthenticated, isInitialized } = useAuthContext();
+  const { isAuthenticated, isInitialized, companyId } = useAuthContext();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && companyId) {
       push(PATH_DASHBOARD.root);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  }, [isAuthenticated, companyId]);
 
-  if (isInitialized === isAuthenticated) {
-    return <LoadingScreen />;
-  }
+  // if (isInitialized === isAuthenticated) {
+  //   return <LoadingScreen />;
+  // }
 
   return <> {children} </>;
 }

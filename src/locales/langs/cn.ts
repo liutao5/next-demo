@@ -56,12 +56,15 @@ const cn = {
   other_cases: `其他情况`,
   item_by_roles: `按角色逐项`,
   only_admin_can_see_this_item: `只有管理员可以看到这个项目`,
-  home: `首页`,
-  contract: `合同`,
-  receipts: `单据`,
-  reconcile: `对账`,
+  menu_home: `首页`,
+  menu_contract: `合同`,
+  menu_receipts: `单据`,
+  menu_reconcile: `对账`,
+  menu_setting: `基础设置`,
+  menu_company: `我的公司`,
   total: `租出租费`,
   login: `登录`,
+  mobile: `手机号`,
 };
 
 export default cn;

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	output: 'export',
-  trailingSlash: true,
+	// output: 'export',
+  swcMinify: false,
   env: {
     // HOST
     HOST_API_KEY: 'https://api-test-wusuan.mengqin.vip',

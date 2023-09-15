@@ -13,29 +13,34 @@ import {
   AuthUserType,
 } from "./types";
 import localStorageAvailable from "@/utils/localStorageAvailable";
-import { setSession } from "./utils";
-import { request } from "@/utils/axios";
+import { setCompany, setSession } from "./utils";
+import { get, post } from "@/utils/axios";
+import { ICompany } from "@/@types/company";
 
 enum Types {
   INITIAL = "INITIAL",
   LOGIN = "LOGIN",
   REGISTER = "REGISTER",
   LOGOUT = "LOGOUT",
+  COMPANY = "COMPANY",
 }
 
 type Payload = {
   [Types.INITIAL]: {
     isAuthenticated: boolean;
+    companyId: string | null;
     user: AuthUserType;
   };
   [Types.LOGIN]: {
-    user: AuthUserType;
+    isAuthenticated: boolean;
   };
   [Types.REGISTER]: {
     isAuthenticated: boolean;
-    user: AuthUserType;
   };
   [Types.LOGOUT]: undefined;
+  [Types.COMPANY]: {
+    companyId: string | null;
+  };
 };
 
 type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>];
@@ -43,14 +48,18 @@ type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>];
 const initialState: AuthStateType = {
   isInitialized: false,
   isAuthenticated: false,
+  isExist: false,
   user: null,
+  companyId: null,
 };
 
 const reducer = (state: AuthStateType, action: ActionsType) => {
   if (action.type === Types.INITIAL) {
     return {
+      ...state,
       isInitialized: true,
       isAuthenticated: action.payload.isAuthenticated,
+      companyId: action.payload.companyId,
       user: action.payload.user,
     };
   }
@@ -58,7 +67,6 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
     return {
       ...state,
       isAuthenticated: true,
-      user: action.payload.user,
     };
   }
   if (action.type === Types.REGISTER) {
@@ -71,7 +79,14 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
     return {
       ...state,
       isAuthenticated: false,
+      companyId: null,
       user: null,
+    };
+  }
+  if (action.type === Types.COMPANY) {
+    return {
+      ...state,
+      companyId: action.payload.companyId,
     };
   }
   return state;
@@ -91,29 +106,55 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const initialize = useCallback(async () => {
     try {
       const token = storageAvailable ? localStorage.getItem("accessToken") : "";
+      const companyId = storageAvailable
+        ? localStorage.getItem("companyId")
+        : "";
 
-      //  && isValidToken(accessToken)
       if (token) {
         setSession(token);
 
-        // const response = await request("/api/account/my-account");
+        const response = await get("/user");
+        const { avatar, companies, gender, nick_name } = response;
 
-        // const { user } = response.data;
-
-        dispatch({
-          type: Types.INITIAL,
-          payload: {
-            isAuthenticated: true,
-            user: {
-              mobile: "test",
+        if (
+          companyId &&
+          companies.map((company: ICompany) => company.id.includes(companyId))
+        ) {
+          setCompany(companyId);
+          dispatch({
+            type: Types.INITIAL,
+            payload: {
+              isAuthenticated: true,
+              companyId,
+              user: {
+                avatar,
+                companies,
+                gender,
+                nick_name,
+              },
             },
-          },
-        });
+          });
+        } else {
+          dispatch({
+            type: Types.INITIAL,
+            payload: {
+              isAuthenticated: true,
+              companyId: null,
+              user: {
+                avatar,
+                companies,
+                gender,
+                nick_name,
+              },
+            },
+          });
+        }
       } else {
         dispatch({
           type: Types.INITIAL,
           payload: {
             isAuthenticated: false,
+            companyId: null,
             user: null,
           },
         });
@@ -124,6 +165,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         type: Types.INITIAL,
         payload: {
           isAuthenticated: false,
+          companyId: null,
           user: null,
         },
       });
@@ -135,74 +177,64 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [initialize]);
 
   // LOGIN
-  const login = useCallback(async (mobile: string, password: string) => {
-    const response = await request("/login", {
-      mobile,
-      password: MD5(password).toString(),
-    });
-    const { token } = response;
-
-    setSession(token);
-
+  const login = useCallback(() => {
     dispatch({
       type: Types.LOGIN,
       payload: {
-        user: {
-          mobile,
-        },
+        isAuthenticated: true,
       },
     });
   }, []);
 
-  // REGISTER
-  const register = useCallback(
-    async (mobile: string, password: string, code: string) => {
-      const response = await request("/reg", {
-        mobile,
-        password: MD5(password).toString(),
-        code: parseInt(code),
-      });
-      const { token } = response;
-
-      localStorage.setItem("accessToken", token);
-
-      dispatch({
-        type: Types.REGISTER,
-        payload: {
-          isAuthenticated: true,
-          user: {
-            mobile,
-          },
-        },
-      });
-    },
-    []
-  );
-
   // LOGOUT
   const logout = useCallback(() => {
     setSession(null);
+    setCompany(null);
     dispatch({
       type: Types.LOGOUT,
     });
   }, []);
 
+  const saveSession = useCallback((token: string) => {
+    setSession(token);
+    dispatch({
+      type: Types.LOGIN,
+      payload: {
+        isAuthenticated: true,
+      },
+    });
+  }, []);
+
+  const saveCompany = useCallback(
+    (companyId: string) => {
+      setCompany(companyId);
+      initialize();
+    },
+    [initialize]
+  );
+
   const memoizedValue = useMemo(
     () => ({
       isInitialized: state.isInitialized,
       isAuthenticated: state.isAuthenticated,
+      isExist: state.isExist,
       user: state.user,
+      companyId: state.companyId,
       login,
-      register,
       logout,
+      saveCompany,
+      saveSession,
     }),
     [
       state.isAuthenticated,
       state.isInitialized,
+      state.isExist,
       state.user,
+      state.companyId,
       login,
       logout,
-      register,
+      saveCompany,
+      saveSession,
     ]
   );
   return (

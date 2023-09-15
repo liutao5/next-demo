@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { alpha } from "@mui/material/styles";
 import { Box, Divider, Typography, Stack, MenuItem } from "@mui/material";
 // routes
-import { PATH_DASHBOARD } from "@/routes/path";
+import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/path";
 // auth
 // import { useAuthContext } from "@/auth/useAuthContext";
 // components
@@ -13,6 +13,10 @@ import { PATH_DASHBOARD } from "@/routes/path";
 // import { useSnackbar } from "@/components/snackbar";
 import MenuPopover from "@/components/menu-popover";
 import { IconButtonAnimate } from "@/components/animate";
+import { useAuthContext } from "@/auth/useAuthContext";
+import { useSnackbar } from "@/components/snackbar";
+import { CustomAvatar } from "@/components/custom-avatar";
+import { getCompany, setCompany } from "@/auth/utils";
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +31,7 @@ const OPTIONS = [
   },
   {
     label: "Settings",
-    linkTo: PATH_DASHBOARD.user.account,
+    linkTo: PATH_DASHBOARD.root,
   },
 ];
 
@@ -36,16 +40,11 @@ const OPTIONS = [
 export default function AccountPopover() {
   const { replace, push } = useRouter();
 
-  const { user, logout } = {
-    user: {
-      email: "",
-      displayName: "",
-      profile: "",
-    },
-    logout: () => console.log("logout"),
-  };
+  const { user, logout } = useAuthContext();
 
-  // const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const companyId = getCompany();
 
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
 
@@ -59,18 +58,18 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      // logout();
-      // replace(PATH_AUTH.login);
+      logout();
+      replace(PATH_AUTH.login);
       handleClosePopover();
     } catch (error) {
       console.error(error);
-      // enqueueSnackbar("Unable to logout!", { variant: "error" });
+      enqueueSnackbar("Unable to logout!", { variant: "error" });
     }
   };
 
-  const handleClickItem = (path: string) => {
+  const handleClickItem = (companyId: string) => {
     handleClosePopover();
-    push(path);
+    setCompany(companyId);
   };
 
   return (
@@ -85,18 +84,15 @@ export default function AccountPopover() {
               content: "''",
               width: "100%",
               height: "100%",
-              borderRadius: "50%",
+              // borderRadius: "50%",
               position: "absolute",
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
+              // bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
             },
           }),
         }}
       >
-        {/* <CustomAvatar
-          src={user?.photoURL}
-          alt={user?.displayName}
-          name={user?.displayName}
-        /> */}
+        <CustomAvatar src={""} alt={user?.nick_name} name={user?.nick_name} />
+        {user?.companies.find((company) => company.id === companyId)?.full_name}
       </IconButtonAnimate>
 
       <MenuPopover
@@ -106,23 +102,23 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {user?.nick_name}
           </Typography>
 
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {user?.email}
+            {user?.nick_name}
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: "dashed" }} />
 
         <Stack sx={{ p: 1 }}>
-          {OPTIONS.map((option) => (
+          {user?.companies.map((company) => (
             <MenuItem
-              key={option.label}
-              onClick={() => handleClickItem(option.linkTo)}
+              key={company.id}
+              onClick={() => handleClickItem(company.id)}
             >
-              {option.label}
+              {company.full_name}
             </MenuItem>
           ))}
         </Stack>

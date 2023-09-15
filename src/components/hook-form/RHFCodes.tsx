@@ -2,7 +2,8 @@ import { useRef } from "react";
 // form
 import { useFormContext, Controller } from "react-hook-form";
 // @mui
-import { Stack, TextField, TextFieldProps } from "@mui/material";
+import { Box, Stack, TextField, TextFieldProps } from "@mui/material";
+import useEventListener from "@/hooks/useEventListener";
 // hooks
 // import useEventListener from '../../hooks/useEventListener';
 
@@ -11,11 +12,13 @@ import { Stack, TextField, TextFieldProps } from "@mui/material";
 type Props = TextFieldProps & {
   keyName: string;
   inputs: string[];
+  onEndInput: VoidFunction;
 };
 
 export default function RHFCodes({
   keyName = "",
   inputs = [],
+  onEndInput,
   ...other
 }: Props) {
   const codesRef = useRef<HTMLDivElement>(null);
@@ -50,14 +53,43 @@ export default function RHFCodes({
       event.target.value = value[0];
     }
 
-    if (value.length >= maxLength && fieldIntIndex < 6 && nextfield !== null) {
+    if (value.length >= maxLength && fieldIntIndex < 4 && nextfield !== null) {
       (nextfield as HTMLElement).focus();
     }
 
     handleChange(event);
+
+    if (fieldIntIndex === inputs.length) {
+      onEndInput();
+      // inputs.forEach((input, index) => setValue(input, ""));
+      // const firstfield: HTMLElement | null = document.querySelector(
+      //   `input[name=${keyName}1]`
+      // );
+      // firstfield?.focus();
+    }
   };
 
-  // useEventListener('paste', handlePaste, codesRef);
+  const handleDelete = (event: any) => {
+    const { value, name } = event.target;
+    if (event.code === "Backspace") {
+      console.log("delete");
+      const fieldIndex = name.replace(keyName, "");
+
+      const fieldIntIndex = Number(fieldIndex);
+
+      const lastfield: HTMLElement | null = document.querySelector(
+        `input[name=${keyName}${fieldIntIndex - 1}]`
+      );
+
+      if (lastfield !== null) {
+        setTimeout(() => (lastfield as HTMLElement).focus(), 0);
+      }
+    }
+  };
+
+  useEventListener("paste", handlePaste, codesRef);
+
+  useEventListener("keydown", handleDelete, codesRef);
 
   return (
     <Stack direction="row" spacing={2} justifyContent="center" ref={codesRef}>
@@ -71,14 +103,13 @@ export default function RHFCodes({
               {...field}
               error={!!error}
               autoFocus={index === 0}
-              placeholder="-"
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 handleChangeWithNextField(event, field.onChange);
               }}
               onFocus={(event) => event.currentTarget.select()}
               InputProps={{
                 sx: {
-                  width: { xs: 36, sm: 56 },
+                  width: { xs: 32, sm: 46 },
                   height: { xs: 36, sm: 56 },
                   "& input": { p: 0, textAlign: "center" },
                 },

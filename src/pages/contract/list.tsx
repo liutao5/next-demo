@@ -15,20 +15,20 @@ ContractListPage.getLayout = (page: React.ReactElement) => (
 
 const tabList = [
   {
-    label: "租出合同",
-    value: "rent",
+    label: "租赁合同",
+    value: "allRent",
     color: "info",
     count: 10,
   },
   {
     label: "借调合同",
-    value: "lend",
+    value: "2",
     color: "info",
     count: 10,
   },
   {
     label: "合伙合同",
-    value: "partner",
+    value: "3",
     color: "info",
     count: 10,
   },
@@ -56,6 +56,9 @@ export default function ContractListPage() {
               name: "合同管理",
               href: PATH_DASHBOARD.contract.root,
             },
+            {
+              name: "列表",
+            },
           ]}
           action={
             <Button
@@ -78,13 +81,13 @@ export default function ContractListPage() {
               </TabList>
             </Box>
             <Divider />
-            <TabPanel sx={{ p: 0 }} value="rent">
+            <TabPanel sx={{ p: 0 }} value="allRent">
               1
             </TabPanel>
-            <TabPanel sx={{ p: 0 }} value="lend">
+            <TabPanel sx={{ p: 0 }} value="rentFee">
               2
             </TabPanel>
-            <TabPanel sx={{ p: 0 }} value="partner">
+            <TabPanel sx={{ p: 0 }} value="lendFee">
               3
             </TabPanel>
           </TabContext>
