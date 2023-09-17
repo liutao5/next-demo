@@ -1,7 +1,7 @@
 import axios from 'axios';
 // config
 import { HOST_API_KEY } from '../config-global';
-import { signature } from '@/wusuan-api-sign/wusuan_api_sign';
+import { signature } from 'wusuan-api-sign/wusuan_api_sign';
 import uuidv4 from './uuidv4';
 
 const axiosInstance = axios.create({
@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 	}
 });
 
-const request = async (url: string, data?: object, method: string = 'post') => {
+const request = async (url: string, data?: object, method: string = 'post', options?: any) => {
 	const timestamp = (Date.now()/1000).toFixed();
 	const nonce = uuidv4();
 	const api_signature = signature(timestamp, nonce);
@@ -26,6 +26,7 @@ const request = async (url: string, data?: object, method: string = 'post') => {
 			'X-Api-Signature': api_signature,
 			'X-App-Platform': 'web',
 			'X-App-Version': '0.0.1',
+			...options,
 		},
 	}).then(res => {
 		return res.data
@@ -35,6 +36,6 @@ const request = async (url: string, data?: object, method: string = 'post') => {
 }
 
 const get = (url: string, data?: object) => request(url, data, 'get')
-const post = (url: string, data?: object) => request(url, data, 'post')
+const post = (url: string, data?: object, options?: any) => request(url, data, 'post', options)
 
 export { axiosInstance, get, post } ;

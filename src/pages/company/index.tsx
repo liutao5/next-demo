@@ -38,6 +38,8 @@ export default function CompanyPage() {
     setCompany(user?.companies.find((company) => company.id === companyId));
   }, [user?.companies]);
 
+  useEffect(() => console.log("company", company), [company]);
+
   const TABS = [
     {
       value: "company",
@@ -65,7 +67,7 @@ export default function CompanyPage() {
             >
               <Typography variant="h6">银行账户</Typography>
               <Stack direction="row" justifyContent="space-around">
-                <Box>开户名称：</Box>
+                <Box>开户名称：{}</Box>
                 <Box>开户行：</Box>
                 <Box>账号：</Box>
               </Stack>
@@ -82,7 +84,40 @@ export default function CompanyPage() {
       value: "invoice",
       label: "开票信息",
       icon: <Iconify icon="ic:round-account-box" />,
-      component: <>invoice</>,
+      component: (
+        <Card>
+          <List>
+            <ListItem
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography variant="h6">仓库</Typography>
+              仓库名称：{company?.warehouse}
+            </ListItem>
+            <ListItem
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography variant="h6">银行账户</Typography>
+              <Stack direction="row" justifyContent="space-around">
+                <Box>开户名称：{}</Box>
+                <Box>开户行：</Box>
+                <Box>账号：</Box>
+              </Stack>
+            </ListItem>
+            <ListItem>
+              <Typography variant="h6">微信账户</Typography>
+              {company?.warehouse}
+            </ListItem>
+          </List>
+        </Card>
+      ),
     },
   ];
 

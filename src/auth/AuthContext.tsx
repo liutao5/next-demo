@@ -113,13 +113,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (token) {
         setSession(token);
 
-        const response = await get("/user");
-        const { avatar, companies, gender, nick_name } = response;
+        const res = await get("/user");
+        const { avatar, companies, gender, nick_name } = res;
+
+        console.log("res", res);
 
         if (
           companyId &&
-          companies.map((company: ICompany) => company.id.includes(companyId))
+          companies.map((company: ICompany) => company.id).includes(companyId)
         ) {
+          console.log("initial", companyId);
           setCompany(companyId);
           dispatch({
             type: Types.INITIAL,
@@ -135,6 +138,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             },
           });
         } else {
+          setCompany(null);
           dispatch({
             type: Types.INITIAL,
             payload: {
@@ -207,6 +211,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const saveCompany = useCallback(
     (companyId: string) => {
+      console.log("save company", companyId);
       setCompany(companyId);
       initialize();
     },

@@ -36,3 +36,7 @@ export const userGet = () => {
 export const companyNew = (data: ICompanyBase) => {
 	return post('/company', data)
 }
+
+export const uploadImg = (image: File) => {
+	return post('/company/logo', { image }, {'Content-Type': 'multipart/form-data',})
+}

@@ -9,6 +9,7 @@ import {
   Divider,
   Grid,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useForm, useFormContext } from "react-hook-form";
@@ -16,7 +17,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RHFTextField, RHFUploadAvatar } from "@/components/hook-form";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { fData } from "@/utils/formatNumber";
-import { companyNew } from "@/api/auth";
+import { companyNew, uploadImg } from "@/api/auth";
 import { setCompany } from "@/auth/utils";
 import { useRouter } from "next/router";
 import { PATH_DASHBOARD } from "@/routes/path";
@@ -31,7 +32,7 @@ interface FormValuesProps {
   logo?: string;
   warehouse?: string;
   financle?: Financle[];
-  invoice?: Invoice;
+  invoice: Invoice;
 }
 
 interface Invoice {
@@ -48,37 +49,36 @@ interface Financle {
   finance_account_type?: number;
   account_name: string;
   account_id: string;
-  bank_name?: string;
+  bank_name: string;
 }
 const CompanyNewEditForm = forwardRef(function CompanyNewEditForm(
   _: any,
   companyRef: any
 ) {
   const { saveCompany } = useAuthContext();
+  const [bankList, setBankList] = useState<number[]>([0]);
   const CompanySchema = Yup.object().shape({
     full_name: Yup.string().required("请输入公司名称"),
     short_name: Yup.string().required("请输出公司简称"),
     logo: Yup.string(),
     warehouse: Yup.string(),
     financle: Yup.array().of(
-      Yup.object()
-        .required()
-        .shape({
-          finance_account_type: Yup.number(),
-          account_id: Yup.string().required("请输出账号"),
-          account_name: Yup.string().required("请输入账号名称"),
-          bank_name: Yup.string(),
-        })
+      Yup.object().shape({
+        finance_account_type: Yup.number(),
+        account_id: Yup.string().required("请输出账号"),
+        account_name: Yup.string().required("请输入账号名称"),
+        bank_name: Yup.string().required("请输出开户行"),
+      })
     ),
-    // invoice: Yup.object().shape({
-    //   is_vat_invoice_special: Yup.boolean().required(),
-    //   title: Yup.string().required(),
-    //   duty_paragraph: Yup.string().required(),
-    //   address: Yup.string(),
-    //   phone_number: Yup.string(),
-    //   deposit_bank: Yup.string(),
-    //   bank_account: Yup.string(),
-    // }),
+    invoice: Yup.object().shape({
+      is_vat_invoice_special: Yup.boolean().required(),
+      title: Yup.string().required("请输入发票抬头"),
+      duty_paragraph: Yup.string().required("请输入税号"),
+      address: Yup.string(),
+      phone_number: Yup.string(),
+      deposit_bank: Yup.string(),
+      bank_account: Yup.string(),
+    }),
   });
 
   const defaultValues = {
@@ -113,23 +113,32 @@ const CompanyNewEditForm = forwardRef(function CompanyNewEditForm(
   } = methods;
 
   const handleDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
+
+      console.log("file", file);
 
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
 
-      if (file) {
-        setValue("logo", newFile.preview, { shouldValidate: true });
+      const res = await uploadImg(newFile);
+      const { file_path } = res;
+      if (file_path) {
+        setValue("logo", file_path);
       }
     },
     [setValue]
   );
 
   const onSubmit = async (data: FormValuesProps) => {
-    console.log(data);
-    const res = await companyNew(data);
+    const { financle } = data;
+    const reqData = {
+      ...data,
+      financle: financle?.map((item) => ({ ...item, finance_account_type: 1 })),
+    };
+    console.log(reqData);
+    const res = await companyNew(reqData);
     if (res.error_code) {
       console.log(res.user_tip);
     }
@@ -192,6 +201,57 @@ const CompanyNewEditForm = forwardRef(function CompanyNewEditForm(
                   增加
                 </Button> */}
               </Grid>
+            </Grid>
+          </Card>
+          <Card sx={{ p: 3, mt: 3 }}>
+            <CardHeader title="账户信息" />
+            <Grid container spacing={3}>
+              {bankList.map((bank, index) => (
+                <Grid
+                  key={`bank${index}`}
+                  item
+                  md={12}
+                  sx={{ display: "flex", gap: 4 }}
+                >
+                  <RHFTextField
+                    name={`financle.${index}.account_name`}
+                    label="开户名称"
+                    required
+                  />
+                  <RHFTextField
+                    name={`financle.${index}.bank_name`}
+                    label="开户行"
+                    required
+                  />
+                  <RHFTextField
+                    name={`financle.${index}.account_id`}
+                    label="账号"
+                    required
+                  />
+                  {index + 1 === bankList.length ? (
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="eva:plus-fill" />}
+                      onClick={() => setBankList((pre) => [...pre, 1])}
+                    >
+                      增加
+                    </Button>
+                  ) : (
+                    <Button
+                      size="small"
+                      color="error"
+                      startIcon={<Iconify icon="eva:minus-fill" />}
+                      onClick={() => {
+                        const temp = [...bankList];
+                        temp.splice(index, 1);
+                        setBankList(temp);
+                      }}
+                    >
+                      删除
+                    </Button>
+                  )}
+                </Grid>
+              ))}
             </Grid>
           </Card>
 

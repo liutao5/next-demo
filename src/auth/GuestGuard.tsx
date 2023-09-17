@@ -17,7 +17,10 @@ export default function GuestGuard({ children }: GuestGuardProps) {
 
   const { isAuthenticated, isInitialized, companyId } = useAuthContext();
 
+  console.log("GuestGuard", isAuthenticated, companyId);
+
   useEffect(() => {
+    console.log("isAuthenticated, companyId]", isAuthenticated, companyId);
     if (isAuthenticated && companyId) {
       push(PATH_DASHBOARD.root);
     }
