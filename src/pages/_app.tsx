@@ -31,7 +31,7 @@ export default function MyApp(props: MyAppProps) {
   return (
     <>
       <Head>
-        <title>无算</title>
+        <title>hello world</title>
       </Head>
       <AuthProvider>
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="zh-cn">

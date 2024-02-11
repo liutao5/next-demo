@@ -21,11 +21,11 @@ export default function GuestGuard({ children }: GuestGuardProps) {
 
   useEffect(() => {
     console.log("isAuthenticated, companyId]", isAuthenticated, companyId);
-    if (isAuthenticated && companyId) {
+    if (isAuthenticated) {
       push(PATH_DASHBOARD.root);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, companyId]);
+  }, [isAuthenticated]);
 
   // if (isInitialized === isAuthenticated) {
   //   return <LoadingScreen />;

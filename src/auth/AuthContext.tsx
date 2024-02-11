@@ -105,54 +105,40 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const initialize = useCallback(async () => {
     try {
-      const token = storageAvailable ? localStorage.getItem("accessToken") : "";
+      // const token = storageAvailable
+      //   ? localStorage.getItem("accessToken")
+      //   : "";
+      const token = "token_test";
       const companyId = storageAvailable
         ? localStorage.getItem("companyId")
         : "";
-
       if (token) {
         setSession(token);
 
-        const res = await get("/user");
+        // const res = await get("/user");
+        const res = {
+          avatar: "test",
+          companies: [],
+          gender: 0,
+          nick_name: "nick_test",
+        };
         const { avatar, companies, gender, nick_name } = res;
 
         console.log("res", res);
 
-        if (
-          companyId &&
-          companies.map((company: ICompany) => company.id).includes(companyId)
-        ) {
-          console.log("initial", companyId);
-          setCompany(companyId);
-          dispatch({
-            type: Types.INITIAL,
-            payload: {
-              isAuthenticated: true,
-              companyId,
-              user: {
-                avatar,
-                companies,
-                gender,
-                nick_name,
-              },
+        dispatch({
+          type: Types.INITIAL,
+          payload: {
+            isAuthenticated: true,
+            companyId: null,
+            user: {
+              avatar,
+              companies,
+              gender,
+              nick_name,
             },
-          });
-        } else {
-          setCompany(null);
-          dispatch({
-            type: Types.INITIAL,
-            payload: {
-              isAuthenticated: true,
-              companyId: null,
-              user: {
-                avatar,
-                companies,
-                gender,
-                nick_name,
-              },
-            },
-          });
-        }
+          },
+        });
       } else {
         dispatch({
           type: Types.INITIAL,

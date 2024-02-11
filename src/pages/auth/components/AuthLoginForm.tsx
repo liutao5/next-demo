@@ -75,6 +75,7 @@ export default function AuthLoginForm(props: Props) {
         return;
       }
       const res = await mobileCheck(data.mobile);
+      console.log(res)
       setMobile(data.mobile);
       if (res.exists) {
         changeStatus("exist");
@@ -105,7 +106,7 @@ export default function AuthLoginForm(props: Props) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <Typography variant="h4">欢迎来到无算</Typography>
+        <Typography variant="h4">欢迎</Typography>
 
         <RHFTextField name="mobile" label="mobile" />
         <LoadingButton

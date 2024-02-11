@@ -51,7 +51,6 @@
     "stylis-plugin-rtl": "^2.1.1",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6",
-    "wusuan-api-sign": "link:wusuan-api-sign",
     "yup": "^1.2.0"
   },
   "devDependencies": {

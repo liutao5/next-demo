@@ -4,7 +4,7 @@ const nextConfig = {
   swcMinify: false,
   env: {
     // HOST
-    HOST_API_KEY: 'https://api-test-wusuan.mengqin.vip',
+    HOST_API_KEY: 'http://localhost:3000',
   },
   reactStrictMode: true,
 	webpack: (config) => {

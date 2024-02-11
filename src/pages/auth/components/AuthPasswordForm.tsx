@@ -32,6 +32,7 @@ type FormValuesProps = {
 
 export default function AuthPasswordForm(props: Props) {
   const { mobile, back, changeStatus } = props;
+  const { saveCompany, saveSession } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
 
   const passwordSchema = Yup.object().shape({
@@ -65,8 +66,9 @@ export default function AuthPasswordForm(props: Props) {
       });
       return;
     }
-    setSession(res.token);
-    changeStatus("company");
+    saveSession(res.token);
+    saveCompany('company')
+    // changeStatus("company");
   };
 
   return (

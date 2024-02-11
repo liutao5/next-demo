@@ -31,9 +31,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     return <LoadingScreen />;
   }
 
-  if (isAuthenticated && !companyId) {
-    return <Login loginStatus="company" />;
-  }
+  // if (!companyId) {
+  //   return <Login loginStatus="company" />;
+  // }
 
   if (!isAuthenticated) {
     if (pathname !== requestedLocation) {

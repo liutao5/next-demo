@@ -78,7 +78,7 @@ export default function SelectCompanyForm() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         <Stack direction="row" spacing={2}>
-          <Typography variant="h4">欢迎来到无算</Typography>
+          <Typography variant="h4">欢迎</Typography>
           <Button variant="text" onClick={() => push("/auth/createCompany")}>
             创建我的公司
           </Button>
@@ -149,7 +149,7 @@ export default function SelectCompanyForm() {
           <CloseIcon />
         </IconButton>
         <DialogContent>
-          联系该公司无算软件管理员，邀请您成为该公司成员。
+          联系该公司软件管理员，邀请您成为该公司成员。
         </DialogContent>
       </Dialog>
     </FormProvider>
